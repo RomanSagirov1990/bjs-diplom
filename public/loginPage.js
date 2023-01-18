@@ -6,7 +6,7 @@ function requestLog(data){
         if (response.success) {
             location.reload();
         } else {
-            using.setLoginErrorMessage(response.data);
+            using.setLoginErrorMessage(response.error);
         }
     });
 }
@@ -17,7 +17,7 @@ function requestReg(data){
         if (response.success) {
             location.reload();
         } else {
-            using.setRegisterErrorMessage(response.data);
+            using.setRegisterErrorMessage(response.error);
         }
     });
 }

@@ -1,6 +1,6 @@
 "use strict"
 
-function funcLogout(){
+function funcLogout() {
     ApiConnector.logout((response) => {
         if (response.success) {
             location.reload();
@@ -15,19 +15,19 @@ logout.action = funcLogout;
 
 
 ApiConnector.current((response) => {
-    if (response.success) {ProfileWidget.showProfile(response.data)};
+    if (response.success) { ProfileWidget.showProfile(response.data) };
 });
 
 
 let course = new RatesBoard();
 
-let requestCourses = function() {
+let requestCourses = function () {
     ApiConnector.getStocks((response) => {
-        if (response.success){
+        if (response.success) {
             course.clearTable();
             course.fillTable(response.data);
         }
-      });
+    });
 };
 requestCourses();
 setInterval(requestCourses, 6000);
@@ -35,75 +35,76 @@ setInterval(requestCourses, 6000);
 
 let money = new MoneyManager();
 
-function showMessage(response){
-    if (response.success){
+function showMessage(response) {
+    if (response.success) {
+        response.error = `Операция прошла успешно`
         ProfileWidget.showProfile(response.data);
-        money.setMessage(false, "Операция прошла успешно");
     } else {
-        money.setMessage(true, response.data);
-    };
+        moneyManager.setMessage(response.success, response.error);
+    }
 };
 
-money.addMoneyCallback = function(data){
+
+money.addMoneyCallback = function (data) {
     ApiConnector.addMoney(data, (response) => {
         showMessage(response);
     });
 };
 
 
-money.conversionMoneyCallback = function(data){
+money.conversionMoneyCallback = function (data) {
     ApiConnector.convertMoney(data, (response) => {
         showMessage(response);
-    });  
+    });
 };
 
 
-money.sendMoneyCallback = function(data){
+money.sendMoneyCallback = function (data) {
     ApiConnector.transferMoney(data, (response) => {
         console.log(response);
         console.log(data);
         console.log(data.amount);
         showMessage(response);
-    });  
+    });
 };
 
 
 let favorites = new FavoritesWidget();
 
-function fillTable(response){
+function fillTable(response) {
     favorites.clearTable();
     favorites.fillTable(response.data);
-    money.updateUsersList(response.data); 
+    money.updateUsersList(response.data);
 }
 
 ApiConnector.getFavorites((response) => {
-    if (response.success){
+    if (response.success) {
         fillTable(response);
     }
 });
 
 
-favorites.addUserCallback = function(data){
+favorites.addUserCallback = function (data) {
     let userName = data.name
     ApiConnector.addUserToFavorites(data, (response) => {
-        if (response.success){
+        if (response.success) {
             fillTable(response);
             favorites.setMessage(true, `${userName} успешно добавлен`);
-        }   else {
+        } else {
             favorites.setMessage(false, response.data);
         }
     });
 }
 
 
-favorites.removeUserCallback = function(data){
+favorites.removeUserCallback = function (data) {
     let userId = data
     ApiConnector.removeUserFromFavorites(data, (response) => {
-        if (response.success){
+        if (response.success) {
             fillTable(response);
             favorites.setMessage(true, `адрес с ID ${userId} успешно удален`);
-        }   else {
-            favorites.setMessage(false,response.data);
+        } else {
+            favorites.setMessage(false, response.data);
         }
     });
 }
