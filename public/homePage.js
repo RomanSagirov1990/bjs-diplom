@@ -38,9 +38,10 @@ let money = new MoneyManager();
 function showMessage(response) {
     if (response.success) {
         response.error = `Операция прошла успешно`
+        money.setMessage(response.error);
         ProfileWidget.showProfile(response.data);
     } else {
-        moneyManager.setMessage(response.success, response.error);
+        money.setMessage(response.success, response.error);
     }
 };
 
@@ -91,7 +92,7 @@ favorites.addUserCallback = function (data) {
             fillTable(response);
             favorites.setMessage(true, `${userName} успешно добавлен`);
         } else {
-            favorites.setMessage(false, response.data);
+            favorites.setMessage(false, response.error);
         }
     });
 }
@@ -104,7 +105,7 @@ favorites.removeUserCallback = function (data) {
             fillTable(response);
             favorites.setMessage(true, `адрес с ID ${userId} успешно удален`);
         } else {
-            favorites.setMessage(false, response.data);
+            favorites.setMessage(false, response.error);
         }
     });
 }
